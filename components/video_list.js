@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import Search from 'react-native-search-box';
 
@@ -37,8 +38,23 @@ class VideoList extends Component {
     }
 
     // ---------- componentDidMount here! -----------//
+    componentDidMount = () => {
+      this.fetchData();
+    }
 
     // ------------ put fetchData here! -------------//
+    fetchData() {
+      youtubeSearch(this.state.query)
+        .then((responseData) => {
+          this.setState({
+            // eslint-disable-next-line react/no-access-state-in-setstate
+            dataSource: this.state.dataSource.cloneWithRows(responseData),
+            isLoading: false,
+          });
+        }).catch((error) => {
+          console.log(error);
+        });
+    }
 
 
     showVideoDetail(video) {
@@ -73,22 +89,6 @@ class VideoList extends Component {
           </View>
         </TouchableHighlight>
       );
-    }
-
-    fetchData() {
-      youtubeSearch(this.state.query)
-        .then((responseData) => {
-          this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(responseData),
-            isLoading: false,
-          });
-        }).catch((error) => {
-          console.log(error);
-        });
-    }
-
-    componentDidMount = () => {
-      this.fetchData();
     }
 
     render() {
